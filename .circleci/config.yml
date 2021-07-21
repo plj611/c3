@@ -45,6 +45,7 @@ jobs:
           command: |
             # Your code here
             # exit 1
+            cd frontend
             npm i
             npm run lint
       - save_cache:
