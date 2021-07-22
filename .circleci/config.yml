@@ -64,6 +64,7 @@ jobs:
           command: |
              # Your code here
              # exit 1
+             cd backend
              npm i
              npm run lint
       - save_cache:
