@@ -148,7 +148,7 @@ jobs:
           command: |
             cd backend
             npm install
-            npm audit fix
+            npm audit
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
