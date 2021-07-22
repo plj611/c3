@@ -126,7 +126,7 @@ jobs:
           name: Frontend scan
           command: |
             cd frontend
-            #npm install
+            npm i
             npm audit fix
       - save_cache:
           paths: [frontend/node_modules]
