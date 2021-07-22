@@ -82,8 +82,11 @@ jobs:
       - checkout
       - restore_cache:
           keys: [frontend-build]
-      - run: cd frontend
-      - run: npm run test
+      - run: 
+          name: Frontend test
+          command: |
+            cd frontend
+            npm run test
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
