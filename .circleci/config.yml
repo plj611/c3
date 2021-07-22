@@ -81,12 +81,12 @@ jobs:
       # Your job code here
       - checkout
       - restore_cache:
-          keys: [backend-build]
+          keys: [frontend-build]
       - run: cd frontend
       - run: npm run test
       - save_cache:
-          paths: [backend/node_modules]
-          key: backend-build
+          paths: [frontend/node_modules]
+          key: frontend-build
                 
 #  test-backend:
 #    docker:
