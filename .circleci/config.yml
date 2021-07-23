@@ -188,6 +188,9 @@ jobs:
       - run:
           name: Add tar
           command: yum install -y tar
+      - run:
+          name: Add gzip
+          command: yum install -y gzip
       - persist_to_workspace:
           root: ~/
           paths:
