@@ -153,20 +153,22 @@ jobs:
           paths: [backend/node_modules]
           key: backend-build
 
-#  deploy-infrastructure:
-#    docker:
-#      # Docker image here that supports AWS CLI
-#    steps:
-#      # Checkout code from git
-#      - run:
-#          name: Ensure back-end infrastructure exists
-#          command: |
-#            aws cloudformation deploy \
-#              --template-file .circleci/files/backend.yml \
-#              #--tags project=your-tag \
-#              # --stack-name "your back-end stack name with workflow id" \
-#              # --parameter-overrides ID="your workflow id"  
-#              exit 1
+  deploy-infrastructure:
+    docker:
+      # Docker image here that supports AWS CLI
+      - image: amazon/aws-cli
+    steps:
+      # Checkout code from git
+      - checkout
+      - run:
+          name: Ensure back-end infrastructure exists
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/backend.yml \
+              --tags project="UdaPeople" \
+              --stack-name "UdaPeople-back-end-${CIRCLE_WORKFLOW_ID}" \
+              --parameter-overrides ID=${CICLE_WORKFLOW_ID}  
+              exit 1
 #      - run:
 #          name: Ensure front-end infrastructure exist
 #          command: |
@@ -322,17 +324,17 @@ jobs:
 workflows:
   default:
     jobs:
-      - build-frontend
-      - build-backend
-      - test-frontend:
-          requires: [build-frontend]
-      - test-backend:
-          requires: [build-backend]
-      - scan-backend:
-          requires: [build-backend]
-      - scan-frontend:
-          requires: [build-frontend]
-#      - deploy-infrastructure:
+#      - build-frontend
+#      - build-backend
+#      - test-frontend:
+#          requires: [build-frontend]
+#      - test-backend:
+#          requires: [build-backend]
+#      - scan-backend:
+#          requires: [build-backend]
+#      - scan-frontend:
+#          requires: [build-frontend]
+      - deploy-infrastructure:
 #          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
 #          filters:
 #            branches:
