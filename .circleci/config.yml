@@ -167,7 +167,7 @@ jobs:
               --template-file .circleci/files/backend.yml \
               --tags project="UdaPeople" \
               --stack-name "UdaPeople-back-end-${CIRCLE_WORKFLOW_ID}" \
-              --parameter-overrides ID=${CICLE_WORKFLOW_ID}  
+              --parameter-overrides ID=${CIRCLE_WORKFLOW_ID}  
 #      - run:
 #          name: Ensure front-end infrastructure exist
 #          command: |
