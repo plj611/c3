@@ -185,6 +185,9 @@ jobs:
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --output text >> ~/project/.circleci/ansible/inventory.txt
             cat ~/project/.circleci/ansible/inventory.txt
+      - run:
+          name: Add tar
+          command: apt install -y tar
       - persist_to_workspace:
           root: ~/
           paths:
