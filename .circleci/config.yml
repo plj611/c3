@@ -13,8 +13,8 @@ commands:
           when: on_fail
           command: |
             echo << parameters.ID >>
-            aws cloudformation delete-stack --stack-name UdaPeople-back-end-${ID}
-            aws cloudformation delete-stack --stack-name UdaPeople-front-end-${ID}
+            aws cloudformation delete-stack --stack-name UdaPeople-back-end-<< parameters.ID >>
+            aws cloudformation delete-stack --stack-name UdaPeople-front-end-<< parameters.ID >>
 #
 #  revert-migrations:
 #    description: Revert the last migration if successfully run in the current workflow.
