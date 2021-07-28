@@ -221,7 +221,7 @@ jobs:
       - run:
           name: Configure server
           command: |
-            ansible-playbook -i project/.circleci/ansible/inventory.txt project/.circleci/ansible/deploy-backend.yml
+            ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/deploy-backend.yml
 
 #      - run:
 #          name: Install dependencies
@@ -366,7 +366,7 @@ workflows:
 #          filters:
 #            branches:
 #              only: [test-feature-branch]
-      - configure-infrastructure
+      - configure-infrastructure:
 #          requires: [deploy-infrastructure]
 #      - run-migrations:
 #          requires: [configure-infrastructure]
