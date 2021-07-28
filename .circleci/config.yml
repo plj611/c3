@@ -202,10 +202,26 @@ jobs:
 #  configure-infrastructure:
 #    docker:
 #      # Docker image here that supports Ansible
+      - image: python:3.7-alpine3.11
 #    steps:
 #      # Checkout code from git
 #      # Add ssh keys with fingerprint
 #      # attach workspace
+    steps:
+      - checkout
+      - attach_workspace:
+        at: ~/
+      - add_ssh_keys:
+          fingerprints: ["2d:12:50:a0:df:1c:e3:25:10:5b:74:fe:15:e2:7f:93"]
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update ansible # install the dependencies needed for your playbook
+      - run:
+          name: Configure server
+          command: |
+            ansible-playbook -i project/.circleci/ansible/inventory.txt playbook.yml
+
 #      - run:
 #          name: Install dependencies
 #          command: |
