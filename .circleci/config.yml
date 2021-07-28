@@ -201,7 +201,7 @@ jobs:
       - destroy-environment:
           ID: ${CIRCLE_WORKFLOW_ID}
 
-#  configure-infrastructure:
+  configure-infrastructure:
 #    docker:
 #      # Docker image here that supports Ansible
       - image: python:3.7-alpine3.11
@@ -222,7 +222,7 @@ jobs:
       - run:
           name: Configure server
           command: |
-            ansible-playbook -i project/.circleci/ansible/inventory.txt playbook.yml
+            ansible-playbook -i project/.circleci/ansible/inventory.txt project/.circleci/ansible/deploy-backend.yml
 
 #      - run:
 #          name: Install dependencies
