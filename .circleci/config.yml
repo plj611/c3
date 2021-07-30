@@ -253,16 +253,17 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["2d:12:50:a0:df:1c:e3:25:10:5b:74:fe:15:e2:7f:93"]
       - run:
-          name: Install dependencies
+          name: Install Ansible 
           command: |
             python -m pip install ansible
             #apk add --update ansible # install the dependencies needed for your playbook
       - run:
           name: Install aws-cli
           command: |
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            ./aws/install
+            #curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            #unzip awscliv2.zip
+            #./aws/install
+            apt-get install awscli
       - run:
           name: Configure server
           command: |
