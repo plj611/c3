@@ -236,8 +236,7 @@ jobs:
 
   configure-infrastructure:
     docker:
-#      # Docker image here that supports Ansible
-      #- image: python:3.7-alpine3.11
+      # Docker image here that supports Ansible
       - image: circleci/python:latest
 #    steps:
 #      # Checkout code from git
@@ -256,30 +255,19 @@ jobs:
           name: Install Ansible 
           command: |
             python -m pip install ansible
-            #apk add --update ansible # install the dependencies needed for your playbook
       - run:
           name: Install aws-cli
           command: |
-            #curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            #unzip awscliv2.zip
-            #./aws/install
             sudo apt-get install awscli
       - run:
           name: Configure server
           command: |
             ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/configure-server.yml
+            exit 1
+      # destroy environment if something wrong
+      - destroy-environment:
+          ID: ${CIRCLE_WORKFLOW_ID}
 
-#      - run:
-#          name: Install dependencies
-#          command: |
-#            # Your code here
-#            exit 1
-#      - run:
-#          name: Configure server
-#          command: |
-#            # Your code here
-#            exit 1
-#      # Here's where you will add some code to rollback on failure      
 #
 #  run-migrations:
 #    docker:
