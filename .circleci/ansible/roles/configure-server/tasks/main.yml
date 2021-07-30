@@ -1,4 +1,8 @@
 ---
+- name: "test echo"
+  shell:
+    cmd: echo $ENVIRONMENT > /tmp/testing
+
 - name: "update apt packages."
   become: yes
   apt:

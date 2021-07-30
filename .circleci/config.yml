@@ -15,6 +15,21 @@ commands:
             echo << parameters.ID >>
             aws cloudformation delete-stack --stack-name UdaPeople-back-end-<< parameters.ID >>
             aws cloudformation delete-stack --stack-name UdaPeople-front-end-<< parameters.ID >>
+
+envvars: &SetUdiPeopleEnvVars
+  environment:
+    # Some environments are set in the CircleCI project level
+    ENVIRONMENT: production
+    TYPEORM_CONNECTION: postgres 
+    TYPEORM_ENTITIES: "./src/modules/domain/**/*.entity{.ts, .js}"
+    TYPEORM_MIGRATIONS: "./src/migrations/*.ts"
+    TYPEORM_MIGRATIONS_DIR: "./src/migrations"
+    NODE_ENV: production 
+    TYPEORM_HOST: ${TYPEORM_HOST}
+    TYPEORM_PORT: 5532 
+    TYPEORM_USERNAME: ${TYPEORM_USERNAME}
+    TYPEORM_PASSWORD: ${TYPEORM_PASSWORD} 
+    TYPEORM_DATABASE: ${TYPEORM_DATABASE} 
 #
 #  revert-migrations:
 #    description: Revert the last migration if successfully run in the current workflow.
@@ -35,6 +50,25 @@ commands:
 #              exit 1
 #            fi
 #            
+#    SetUdiPeopleEnvVars:
+#      description: Setup UdiPeople environment variables
+#      steps:
+#        - run:
+#          command: |
+#            environment:
+#              # Some environments are set in the CircleCI project level
+#              ENVIRONMENT: production
+#              TYPEORM_CONNECTION: postgres 
+#              TYPEORM_ENTITIES: "./src/modules/domain/**/*.entity{.ts, .js}"
+#              TYPEORM_MIGRATIONS: "./src/migrations/*.ts"
+#              TYPEORM_MIGRATIONS_DIR: "./src/migrations"
+#              NODE_ENV: production 
+#              TYPEORM_HOST: ${TYPEORM_HOST}
+#              TYPEORM_PORT: 5532 
+#              TYPEORM_USERNAME: ${TYPEORM_USERNAME}
+#              TYPEORM_PASSWORD: ${TYPEORM_PASSWORD} 
+#              TYPEORM_DATABASE: ${TYPEORM_DATABASE} 
+
 jobs:
   build-frontend:
     docker:
@@ -208,12 +242,16 @@ jobs:
 #      # Checkout code from git
 #      # Add ssh keys with fingerprint
 #      # attach workspace
+
+    <<: *SetUdiPeopleEnvVars
+
     steps:
       - checkout
       - attach_workspace:
           at: ~/
       - add_ssh_keys:
           fingerprints: ["2d:12:50:a0:df:1c:e3:25:10:5b:74:fe:15:e2:7f:93"]
+      - SetUdiPeopleEnvVars
       - run:
           name: Install dependencies
           command: |
@@ -221,7 +259,7 @@ jobs:
       - run:
           name: Configure server
           command: |
-            ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/deploy-backend.yml
+            ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/configure-server.yml
 
 #      - run:
 #          name: Install dependencies
