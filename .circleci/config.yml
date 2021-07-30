@@ -16,7 +16,7 @@ commands:
             aws cloudformation delete-stack --stack-name UdaPeople-back-end-<< parameters.ID >>
             aws cloudformation delete-stack --stack-name UdaPeople-front-end-<< parameters.ID >>
 
-envvars: &SetUdiPeopleEnvVars
+SetUdiPeopleEnvVars: &SetUdiPeopleEnvVars
   environment:
     # Some environments are set in the CircleCI project level
     ENVIRONMENT: production
