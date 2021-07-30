@@ -251,7 +251,6 @@ jobs:
           at: ~/
       - add_ssh_keys:
           fingerprints: ["2d:12:50:a0:df:1c:e3:25:10:5b:74:fe:15:e2:7f:93"]
-      - SetUdiPeopleEnvVars
       - run:
           name: Install dependencies
           command: |
