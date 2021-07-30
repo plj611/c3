@@ -1,7 +1,7 @@
 ---
 - name: "test echo"
   shell:
-    cmd: echo $ENVIRONMENT > /tmp/testing
+    cmd: echo $TYPEORM_ENTITIES > /tmp/testing
 
 - name: "update apt packages."
   become: yes
