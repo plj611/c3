@@ -263,7 +263,6 @@ jobs:
           name: Configure server
           command: |
             ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/configure-server.yml
-            exit 1
       # destroy environment if something wrong
       - destroy-environment:
           ID: ${CIRCLE_WORKFLOW_ID}
