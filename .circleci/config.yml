@@ -16,7 +16,7 @@ commands:
             aws cloudformation delete-stack --stack-name UdaPeople-back-end-<< parameters.ID >>
             aws cloudformation delete-stack --stack-name UdaPeople-front-end-<< parameters.ID >>
 
-SetUdiVars: &SetUdiPeopleEnvVars
+SetUdiPeopleEnvVars: &SetUdiPeopleEnvVars
   environment:
     # Some environments are set in the CircleCI project level
     ENVIRONMENT: production
@@ -255,6 +255,12 @@ jobs:
           name: Install dependencies
           command: |
             apk add --update ansible # install the dependencies needed for your playbook
+      -run:
+          name: Install aws-cli
+          command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            ./aws/install
       - run:
           name: Configure server
           command: |
