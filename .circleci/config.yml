@@ -281,8 +281,9 @@ jobs:
           name: Run migrations
           command: |
             # Your code here
-            cd backup
             pwd
+            ls
+            cd backup
             echo "NODE_ENV=local" > .env
             echo "VERSION=1" >> .env
             echo "TYPEORM_CONNECTION=postgres" >> .env
