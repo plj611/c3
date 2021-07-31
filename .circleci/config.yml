@@ -298,7 +298,8 @@ jobs:
             #echo TYPEORM_PASSWORD=${TYPEORM_PASSWORD} >> .env
             #echo TYPEORM_DATABASE=${TYPEORM_DATABASE} >> .env
 
-            echo NODE_ENV=local > .env
+            echo NODE_ENV=production > .env
+            echo ENVIRONMENT=production >> .env
             echo VERSION=1 >> .env
             echo TYPEORM_CONNECTION=postgres >> .env
             echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> .env
