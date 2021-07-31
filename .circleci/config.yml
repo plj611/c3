@@ -295,6 +295,7 @@ jobs:
 
             cd backend
             npm i
+            cat "backend/.env"
             npm run migrations > migration.log
             cat migration.log
 
