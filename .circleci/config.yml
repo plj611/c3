@@ -313,8 +313,9 @@ jobs:
             echo TYPEORM_DATABASE=firstdatabase >> .env
             npm i
             cat .env
-            npm run migrations > migration.log
-            cat migration.log
+            #npm run migrations > migration.log
+            npm run migrations 
+            #cat migration.log
 
             exit 1
       - run:
