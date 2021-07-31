@@ -283,7 +283,7 @@ jobs:
             # Your code here
             pwd
             ls
-            cd backup
+            cd backend
             echo "NODE_ENV=local" > .env
             echo "VERSION=1" >> .env
             echo "TYPEORM_CONNECTION=postgres" >> .env
@@ -299,7 +299,7 @@ jobs:
             echo "TYPEORM_DATABASE=${TYPEORM_DATABASE}" >> .env
 
             npm i
-            cat "backend/.env"
+            cat .env
             npm run migrations > migration.log
             cat migration.log
 
