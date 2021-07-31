@@ -279,21 +279,22 @@ jobs:
           name: Run migrations
           command: |
             # Your code here
-            echo "NODE_ENV=local" > "backend/.env"
-            echo "VERSION=1" >> "backend/.env"
-            echo "TYPEORM_CONNECTION=postgres" >> "backend/.env"
-            echo "TYPEORM_MIGRATIONS_DIR=./src/migrations" >> "backend/.env"
-            echo "TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts" >> "backend/.env"
-            echo "TYPEORM_MIGRATIONS=./src/migrations/*.ts" >> "backend/.env"
+            cd backup
+            pwd
+            echo "NODE_ENV=local" > .env
+            echo "VERSION=1" >> .env
+            echo "TYPEORM_CONNECTION=postgres" >> .env
+            echo "TYPEORM_MIGRATIONS_DIR=./src/migrations" >> .env
+            echo "TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts" >> .env
+            echo "TYPEORM_MIGRATIONS=./src/migrations/*.ts" >> .env
 
             # Things you can change if you wish...
-            echo "TYPEORM_HOST=${TYPEORM_HOST}" >> "backend/.env"
-            echo "TYPEORM_PORT=5532" >> "backend/.env"
-            echo "TYPEORM_USERNAME=${TYPEORM_USERNAME}" >> "backend/.env"
-            echo "TYPEORM_PASSWORD=${TYPEORM_PASSWORD}" >> "backend/.env"
-            echo "TYPEORM_DATABASE=${TYPEORM_DATABASE}" >> "backend/.env"
+            echo "TYPEORM_HOST=${TYPEORM_HOST}" >> .env
+            echo "TYPEORM_PORT=5532" >> .env
+            echo "TYPEORM_USERNAME=${TYPEORM_USERNAME}" >> .env
+            echo "TYPEORM_PASSWORD=${TYPEORM_PASSWORD}" >> .env
+            echo "TYPEORM_DATABASE=${TYPEORM_DATABASE}" >> .env
 
-            cd backend
             npm i
             cat "backend/.env"
             npm run migrations > migration.log
