@@ -288,7 +288,7 @@ jobs:
             # Your code here
             cd backend
             npm i
-            npm run migrations > migration.log
+            npm run migrations | tee migration.log
             migration_status=$(grep -c "has been executed successfully" migration.log)
             if [ $migration_status -le 0 ]
             then
