@@ -36,10 +36,12 @@ commands:
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
             echo << parameters.ID >>
             SUCCESS=$(curl -H "token: << pipeline.parameters.memstash_token >>" --request GET https://api.memstash.io/values/migration_<< parameters.ID >>)
-            if [ $SUCCESS -eq 1 ]
-            then
-              echo "revert migration"
-            fi
+            echo $SUCCESS
+
+            #if [ $SUCCESS -eq 1 ]
+            #then
+            #  echo "revert migration"
+            #fi
 
 SetUdiPeopleEnvVars: &SetUdiPeopleEnvVars
   environment:
