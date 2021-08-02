@@ -1,5 +1,10 @@
 version: 2.1
 
+parameters:
+  memstash_token:
+    type: string
+    default: 22f83c2a-ce36-452f-9b4f-5a822f20fcbd
+
 commands:
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
@@ -281,18 +286,26 @@ jobs:
           name: Run migrations
           command: |
             # Your code here
-            #::::::::::::::::::::::::::::::::::::cd backend
-            #::::::::::::::::::::::::::::::::::::npm i
-            #::::::::::::::::::::::::::::::::::::#npm run migrations > migration.log
-            #::::::::::::::::::::::::::::::::::::npm run migrations 
-            #::::::::::::::::::::::::::::::::::::#cat migration.log
-
-            exit 1
+            cd backend
+            npm i
+            npm run migrations > migration.log
+            migration_status=$(grep -c "has been executed successfully" migration.log)
+            if [ $migration_status -le 0 ]
+            then
+              echo "bad migration"
+              exit 1
+            fi
+      - save_cache:
+          paths: [backend/node_modules]
+          key: backend-build
       - run:
           name: Send migration results to memstash
           command: |
             # Your code here
-            exit 1
+              curl -H "Content-Type: text/plain" \
+              -H "token: << pipeline.parameters.memstash_token >>" \
+              --request PUT --data "1" \
+              https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
       - run:
           name: Fail 1
           when: on_fail
@@ -300,9 +313,6 @@ jobs:
       - run:
           name: Fail 2
           command: echo "Fail 2"
-      - save_cache:
-          paths: [backend/node_modules]
-          key: backend-build
      # Here's where you will add some code to rollback on failure      
 #
 #  deploy-frontend:
