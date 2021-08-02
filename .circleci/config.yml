@@ -281,11 +281,11 @@ jobs:
           name: Run migrations
           command: |
             # Your code here
-            cd backend
-            npm i
-            #npm run migrations > migration.log
-            npm run migrations 
-            #cat migration.log
+            #::::::::::::::::::::::::::::::::::::cd backend
+            #::::::::::::::::::::::::::::::::::::npm i
+            #::::::::::::::::::::::::::::::::::::#npm run migrations > migration.log
+            #::::::::::::::::::::::::::::::::::::npm run migrations 
+            #::::::::::::::::::::::::::::::::::::#cat migration.log
 
             exit 1
       - run:
@@ -293,6 +293,14 @@ jobs:
           command: |
             # Your code here
             exit 1
+      - run:
+          name: Fail 1
+          when: on_fail
+          command: echo "Fail 1"
+      - run:
+          name: Fail 2
+          when: on_fail
+          command: echo "Fail 2"
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
