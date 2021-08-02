@@ -299,7 +299,6 @@ jobs:
           command: echo "Fail 1"
       - run:
           name: Fail 2
-          when: on_fail
           command: echo "Fail 2"
       - save_cache:
           paths: [backend/node_modules]
