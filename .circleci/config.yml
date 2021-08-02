@@ -297,6 +297,7 @@ jobs:
           name: Install aws-cli
           when: on_fail
           command: |
+            sudo apt-get update
             sudo apt-get install awscli
       - revert-migrations:
           ID: ${CIRCLE_WORKFLOW_ID}
