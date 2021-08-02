@@ -21,6 +21,27 @@ commands:
             aws cloudformation delete-stack --stack-name UdaPeople-back-end-<< parameters.ID >>
             aws cloudformation delete-stack --stack-name UdaPeople-front-end-<< parameters.ID >>
 
+  revert-migrations:
+    description: Revert the last migration if successfully run in the current workflow.
+    parameters:
+      # Add parameter here     
+      ID:
+        type: string
+    steps:
+      - run:
+          name: Revert migrations
+          # Add when this will run
+          when: on_fail
+          command: |
+            # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
+            echo << parameters.ID >>
+            SUCCESS=$(curl -H "token: << pipeline.parameters.memstash_token >>" --request GET \
+            https://api.memstash.io/values/migration_<< parameters.ID >>)
+            if [ $SUCCESS -eq 1 ]
+            then
+              echo "revert migration"
+            fi
+
 SetUdiPeopleEnvVars: &SetUdiPeopleEnvVars
   environment:
     # Some environments are set in the CircleCI project level
@@ -35,44 +56,6 @@ SetUdiPeopleEnvVars: &SetUdiPeopleEnvVars
     TYPEORM_USERNAME: ${TYPEORM_USERNAME}
     TYPEORM_PASSWORD: ${TYPEORM_PASSWORD} 
     TYPEORM_DATABASE: ${TYPEORM_DATABASE} 
-#
-#  revert-migrations:
-#    description: Revert the last migration if successfully run in the current workflow.
-#    parameters:
-#      # Add parameter here     
-#    steps:
-#      - run:
-#          name: Revert migrations
-#          # Add when this will run
-#          command: |
-#            # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-#            SUCCESS = 1
-#            if(( $SUCCESS==1 )); 
-#            then
-#            #  cd ~/project/backend
-#            #  npm install
-#            #  Add revert code here. You can find this in the Getting Started section.
-#              exit 1
-#            fi
-#            
-#    SetUdiPeopleEnvVars:
-#      description: Setup UdiPeople environment variables
-#      steps:
-#        - run:
-#          command: |
-#            environment:
-#              # Some environments are set in the CircleCI project level
-#              ENVIRONMENT: production
-#              TYPEORM_CONNECTION: postgres 
-#              TYPEORM_ENTITIES: "./src/modules/domain/**/*.entity{.ts, .js}"
-#              TYPEORM_MIGRATIONS: "./src/migrations/*.ts"
-#              TYPEORM_MIGRATIONS_DIR: "./src/migrations"
-#              NODE_ENV: production 
-#              TYPEORM_HOST: ${TYPEORM_HOST}
-#              TYPEORM_PORT: 5532 
-#              TYPEORM_USERNAME: ${TYPEORM_USERNAME}
-#              TYPEORM_PASSWORD: ${TYPEORM_PASSWORD} 
-#              TYPEORM_DATABASE: ${TYPEORM_DATABASE} 
 
 jobs:
   build-frontend:
@@ -306,13 +289,10 @@ jobs:
               -H "token: << pipeline.parameters.memstash_token >>" \
               --request PUT --data "1" \
               https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
-      - run:
-          name: Fail 1
-          when: on_fail
-          command: echo "Fail 1"
-      - run:
-          name: Fail 2
-          command: echo "Fail 2"
+      - revert-migrations:
+          ID: ${CIRCLE_WORKFLOW_ID}
+      - destroy-environment:
+          ID: ${CIRCLE_WORKFLOW_ID}
      # Here's where you will add some code to rollback on failure      
 #
 #  deploy-frontend:
