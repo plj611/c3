@@ -37,11 +37,11 @@ commands:
             echo << parameters.ID >>
             SUCCESS=$(curl -H "token: << pipeline.parameters.memstash_token >>" --request GET https://api.memstash.io/values/migration_<< parameters.ID >>)
             echo $SUCCESS
-
-            #if [ $SUCCESS -eq 1 ]
-            #then
-            #  echo "revert migration"
-            #fi
+            pwd
+            if [ "$SUCCESS" -eq 1 ]
+            then
+              echo "revert migration"
+            fi
 
 SetUdiPeopleEnvVars: &SetUdiPeopleEnvVars
   environment:
