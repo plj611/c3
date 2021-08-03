@@ -4,6 +4,9 @@ parameters:
   memstash_token:
     type: string
     default: 22f83c2a-ce36-452f-9b4f-5a822f20fcbd
+  run_id:
+    type: string
+    default: ${CIRCLE_WORKFLOW_ID:24}
 
 commands:
   destroy-environment:
@@ -195,7 +198,8 @@ jobs:
               --template-file .circleci/files/backend.yml \
               --tags project="UdaPeople" \
               --stack-name "UdaPeople-back-end-${CIRCLE_WORKFLOW_ID}" \
-              --parameter-overrides ID=${CIRCLE_WORKFLOW_ID}  
+              --parameter-overrides ID=<< pipeline.parameters.run_id >>  
+              #--parameter-overrides ID=${CIRCLE_WORKFLOW_ID}  
       - run:
           name: Ensure front-end infrastructure exist
           command: |
@@ -203,7 +207,8 @@ jobs:
               --template-file .circleci/files/frontend.yml \
               --tags project="UdaPeople" \
               --stack-name "UdaPeople-front-end-${CIRCLE_WORKFLOW_ID}" \
-              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID}"  
+              --parameter-overrides ID=<< pipeline.parameters.run_id >>  
+              #--parameter-overrides ID="${CIRCLE_WORKFLOW_ID}"  
       - run:
           name: Add back-end ip to ansible inventory
           command: |
@@ -340,7 +345,7 @@ jobs:
           name: Deploy frontend objects
           command: |
             # your code here
-            aws s3 cp --recursive frontend/dist "s3://udapeople-${CIRCLE_WORKFLOW_ID}"         
+            aws s3 cp --recursive frontend/dist "s3://udapeople-<< pipeline.parameters.run_id >>"         
        # Here's where you will add some code to rollback on failure      
                     
 #  deploy-backend:
