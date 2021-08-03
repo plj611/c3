@@ -258,7 +258,6 @@ jobs:
       - destroy-environment:
           ID: ${CIRCLE_WORKFLOW_ID}
 
-
   run-migrations:
     docker:
       # Docker image here that supports NodeJS
@@ -292,7 +291,6 @@ jobs:
               -H "token: << pipeline.parameters.memstash_token >>" \
               --request PUT --data "1" \
               https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
-              exit 1
       - run:
           name: Install aws-cli
           when: on_fail
@@ -304,28 +302,38 @@ jobs:
       - destroy-environment:
           ID: ${CIRCLE_WORKFLOW_ID}
      # Here's where you will add some code to rollback on failure      
-#
-#  deploy-frontend:
-#    docker:
-#      # Docker image here that supports AWS CLI
-#    steps:
-#      # Checkout code from git
-#      - run:
-#          name: Install dependencies
-#          command: |
-#            # your code here
-#      - run:
-#          name: Get backend url
-#          command: |
-#            # your code here
-#            export API_URL="http://${BACKEND_IP}:3030"
-#            echo "${API_URL}"
-#      - run:
-#          name: Deploy frontend objects
-#          command: |
-#            # your code here
-#      # Here's where you will add some code to rollback on failure      
-#                    
+
+  deploy-frontend:
+    docker:
+      # Docker image here that supports AWS CLI
+      - image: circleci/node:13.8.0
+    steps:
+      # Checkout code from git
+      - checkout
+      - attach_workspace:
+        at: ~/
+      - run:
+          name: Install dependencies
+          command: |
+            # your code here
+            cd frontend
+            npm install
+      - run:
+          name: Get backend url
+          command: |
+            # your code here
+            pwd
+            BACKEND_IP=$(tail -n 1 .circleci/ansible/inventory.txt)
+            echo $BACKEND_IP
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "${API_URL}"
+            exit 1
+      #- run:
+      #    name: Deploy frontend objects
+      #    command: |
+      #      # your code here
+      # Here's where you will add some code to rollback on failure      
+                    
 #  deploy-backend:
 #    docker:
 #      # Docker image here that supports Ansible
@@ -414,16 +422,16 @@ workflows:
 #          requires: [build-backend]
 #      - scan-frontend:
 #          requires: [build-frontend]
-      - deploy-infrastructure
+###      - deploy-infrastructure
 #          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
 #          filters:
 #            branches:
 #              only: [test-feature-branch]
-      - configure-infrastructure:
-          requires: [deploy-infrastructure]
-      - run-migrations:
-          requires: [configure-infrastructure]
-#      - deploy-frontend:
+###      - configure-infrastructure:
+###          requires: [deploy-infrastructure]
+###      - run-migrations:
+###          requires: [configure-infrastructure]
+      - deploy-frontend
 #          requires: [run-migrations]
 #      - deploy-backend:
 #          requires: [run-migrations]
