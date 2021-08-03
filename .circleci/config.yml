@@ -346,6 +346,7 @@ jobs:
           name: Deploy frontend objects
           command: |
             # your code here
+            aws --version
             aws s3 cp --recursive frontend/dist "s3://udapeople-<< pipeline.parameters.run_id >>"         
        # Here's where you will add some code to rollback on failure      
                     
