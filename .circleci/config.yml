@@ -336,6 +336,7 @@ jobs:
           command: |
             cd frontend
             npm run build
+            ls -lR
       - run:
           name: Add aws-cli
           command: |
