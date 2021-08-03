@@ -441,7 +441,7 @@ workflows:
 #          requires: [build-backend]
 #      - scan-frontend:
 #          requires: [build-frontend]
-#      - deploy-infrastructure
+      - deploy-infrastructure
 #          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
 #          filters:
 #            branches:
@@ -450,8 +450,8 @@ workflows:
 ###          requires: [deploy-infrastructure]
 ###      - run-migrations:
 ###          requires: [configure-infrastructure]
-      - deploy-frontend
-#          requires: [deploy-infrastructure] # this line should be deleted!!!
+      - deploy-frontend:
+          requires: [deploy-infrastructure] # this line should be deleted!!!
 #          requires: [run-migrations]
 #      - deploy-backend:
 #          requires: [run-migrations]
