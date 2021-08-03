@@ -440,7 +440,8 @@ workflows:
 ###          requires: [deploy-infrastructure]
 ###      - run-migrations:
 ###          requires: [configure-infrastructure]
-      - deploy-frontend
+      - deploy-frontend:
+          requires: [deploy-infrastructure] # this line should be deleted!!!
 #          requires: [run-migrations]
 #      - deploy-backend:
 #          requires: [run-migrations]
