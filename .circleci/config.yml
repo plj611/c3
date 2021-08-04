@@ -360,7 +360,7 @@ jobs:
   deploy-backend:
     docker:
       # Docker image here that supports Ansible
-      - image: circleci/node:13.8.0
+      - image: circleci/python:latest
     steps:
       # Checkout code from git
       # Add ssh keys with fingerprint
