@@ -352,23 +352,50 @@ jobs:
             aws --version
             aws s3 cp --recursive frontend/dist "s3://udapeople-<< pipeline.parameters.run_id >>"         
        # Here's where you will add some code to rollback on failure      
+      - revert-migrations:
+          ID: ${CIRCLE_WORKFLOW_ID}
+      - destroy-environment:
+          ID: ${CIRCLE_WORKFLOW_ID}
                     
-#  deploy-backend:
-#    docker:
-#      # Docker image here that supports Ansible
-#    steps:
-#      # Checkout code from git
-#      # Add ssh keys with fingerprint
-#      # attach workspace
-#      - run:
-#          name: Install dependencies
-#          command: |
-#            # your code here
-#      - run:
-#          name: Deploy backend
-#          command: |
-#            # your code here
-#      # Here's where you will add some code to rollback on failure  
+  deploy-backend:
+    docker:
+      # Docker image here that supports Ansible
+      - image: circleci/python:latest
+    steps:
+      # Checkout code from git
+      # Add ssh keys with fingerprint
+      # attach workspace
+      - checkout
+      - attach_workspace:
+          at: ~/
+      - add_ssh_keys:
+          fingerprints: ["2d:12:50:a0:df:1c:e3:25:10:5b:74:fe:15:e2:7f:93"]
+      - run:
+          name: Install Ansible 
+          command: |
+            python -m pip install ansible
+      - run: 
+          name: Backend build 
+          command: |
+            cd backend
+            npm install
+            npm run build 
+            ls -lR dist
+            exit 1
+      - run:
+          name: Configure server
+          command: |
+            ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/deploy-backend.yml
+      - run:
+          name: Install aws-cli
+          when: on_fail
+          command: |
+            sudo apt-get install awscli
+      - revert-migrations:
+          ID: ${CIRCLE_WORKFLOW_ID}
+      - destroy-environment:
+          ID: ${CIRCLE_WORKFLOW_ID}
+
 #
 #  smoke-test:
 #    docker:
@@ -450,10 +477,10 @@ workflows:
 ###          requires: [deploy-infrastructure]
 ###      - run-migrations:
 ###          requires: [configure-infrastructure]
-      - deploy-frontend:
-          requires: [deploy-infrastructure] # this line should be deleted!!!
+###      - deploy-frontend:
 #          requires: [run-migrations]
-#      - deploy-backend:
+      - deploy-backend:
+          requires: [deploy-infrastructure] # this line should be deleted!!!
 #          requires: [run-migrations]
 #      - smoke-test:
 #          requires: [deploy-backend, deploy-frontend]
