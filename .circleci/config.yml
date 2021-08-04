@@ -385,7 +385,7 @@ jobs:
             npm install
             npm run build 
             ls -lR dist
-            exit 1
+            tar cvf backend.tar ./dist
       - run:
           name: Configure server
           command: |

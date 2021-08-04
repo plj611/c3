@@ -1,0 +1,5 @@
+---
+- name: "Copy backend to remote"
+  copy:
+    src: ~/backend/backend.tar
+    dest: /home/ubuntu/backend.tar
