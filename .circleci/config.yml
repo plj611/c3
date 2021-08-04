@@ -360,7 +360,6 @@ jobs:
   deploy-backend:
     docker:
       # Docker image here that supports Ansible
-      #- image: circleci/python:latest
       - image: circleci/node:13.8.0
     steps:
       # Checkout code from git
@@ -375,6 +374,10 @@ jobs:
           name: Install Ansible 
           command: |
             python -m pip install ansible
+      - run:
+          name: Install npm nodejs
+          command: |
+            sudo apt install npm nodejs
       - run: 
           name: Backend build 
           command: |
