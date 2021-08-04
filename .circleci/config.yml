@@ -387,7 +387,7 @@ jobs:
             ls -lR dist
             tar cvf backend.tar ./dist
       - run:
-          name: Configure server
+          name: Deploy server
           command: |
             ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/deploy-backend.yml
       - run:
