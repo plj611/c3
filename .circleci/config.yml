@@ -485,9 +485,9 @@ workflows:
           requires: [configure-infrastructure]
 #      - deploy-frontend:
 #          requires: [run-migrations]
-      - deploy-backend:
+#      - deploy-backend:
 #          requires: [deploy-infrastructure] # this line should be deleted!!!
-          requires: [run-migrations]
+#          requires: [run-migrations]
 #      - smoke-test:
 #          requires: [deploy-backend, deploy-frontend]
 #      - cloudfront-update:
