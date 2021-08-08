@@ -379,13 +379,13 @@ jobs:
           command: |
             sudo apt install npm nodejs
       - run: 
-          name: Backend build 
+          name: Tar backend 
           command: |
-            cd backend
-            npm install
-            npm run build 
-            ls -lR dist
-            tar cvf backend.tar ./dist
+            #cd backend
+            #npm install
+            #npm run build 
+            ls -l
+            tar cvf original.backend.tar backend
       - run:
           name: Deploy server
           command: |
@@ -485,9 +485,9 @@ workflows:
           requires: [configure-infrastructure]
 #      - deploy-frontend:
 #          requires: [run-migrations]
-#      - deploy-backend:
+      - deploy-backend:
 #          requires: [deploy-infrastructure] # this line should be deleted!!!
-#          requires: [run-migrations]
+          requires: [run-migrations]
 #      - smoke-test:
 #          requires: [deploy-backend, deploy-frontend]
 #      - cloudfront-update:
