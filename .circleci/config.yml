@@ -423,7 +423,7 @@ jobs:
             # your code here
             BACKEND_IP=$(tail -n 1 .circleci/ansible/inventory.txt)
             echo $BACKEND_IP
-            export API_URL="http://${BACKEND_IP}:3030"
+            echo "export API_URL=http://${BACKEND_IP}:3030" >> $BASH_ENV
       - run:
           name: Backend smoke test.
           command: |
