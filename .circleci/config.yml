@@ -429,19 +429,19 @@ jobs:
           command: |
             # your code here
             echo $API_URL
-            curl --connect-timeout 10 -s http://${API_URL}/api/status
-            retval=$?
+            ##curl --connect-timeout 10 -s http://${API_URL}/api/status
+            ##retval=$?
 
-            echo $retval
+            ##echo $retval
 
-            if [ $retval -eq 0 ]
-            then
-               echo "Backend OK"
-               exit 0
-            else
-               echo "Backend Fail"
-               exit 1
-            fi
+            ##if [ $retval -eq 0 ]
+            ##then
+            ##   echo "Backend OK"
+            ##   exit 0
+            ##else
+            ##   echo "Backend Fail"
+            ##   exit 1
+            ##fi
 
       #- run:
       #    name: Frontend smoke test.
