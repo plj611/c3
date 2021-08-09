@@ -402,30 +402,53 @@ jobs:
       - destroy-environment:
           ID: ${CIRCLE_WORKFLOW_ID}
 
-#
-#  smoke-test:
-#    docker:
-#      # Lightweight Docker image 
-#    steps:
-#      # Checkout code from git
-#      - run:
-#          name: Install dependencies
-#          command: |
-#            # your code here
-#      - run:
-#          name: Get backend url
-#          command: |
-#            # your code here
-#      - run:
-#          name: Backend smoke test.
-#          command: |
-#            # your code here
-#      - run:
-#          name: Frontend smoke test.
-#          command: |
-#            # your code here
-#      # Here's where you will add some code to rollback on failure  
-#
+  smoke-test:
+    docker:
+      # Docker image here that supports Ansible
+      - image: circleci/python:latest
+    steps:
+      # Checkout code from git
+      # Add ssh keys with fingerprint
+      # attach workspace
+      - checkout
+      - attach_workspace:
+          at: ~/
+      #- run:
+      #    name: Install dependencies
+      #    command: |
+      #      # your code here
+      - run:
+          name: Get backend url
+          command: |
+            # your code here
+            BACKEND_IP=$(tail -n 1 .circleci/ansible/inventory.txt)
+            echo $BACKEND_IP
+            export API_URL="http://${BACKEND_IP}:3030"
+      - run:
+          name: Backend smoke test.
+          command: |
+            # your code here
+            echo $API_URL
+            curl --connect-timeout 10 -s http://${API_URL}/api/status
+            retval=$?
+
+            echo $retval
+
+            if [ $retval -eq 0 ]
+            then
+               echo "Backend OK"
+               exit 0
+            else
+               echo "Backend Fail"
+               exit 1
+            fi
+
+      #- run:
+      #    name: Frontend smoke test.
+      #    command: |
+      #      # your code here
+      # Here's where you will add some code to rollback on failure  
+
 #  cloudfront-update:
 #    docker:
 #      # Docker image here that supports AWS CLI
@@ -474,22 +497,22 @@ workflows:
 #          requires: [build-backend]
 #      - scan-frontend:
 #          requires: [build-frontend]
-      - deploy-infrastructure
-#          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-#          filters:
-#            branches:
-#              only: [test-feature-branch]
-      - configure-infrastructure:
-          requires: [deploy-infrastructure]
-#      - run-migrations:
-#          requires: [configure-infrastructure]
-      - deploy-frontend:
-          requires: [configure-infrastructure] # this line should be deleted!!!
-#          requires: [run-migrations]
-      - deploy-backend:
-          requires: [configure-infrastructure] # this line should be deleted!!!
-#          requires: [run-migrations]
-#      - smoke-test:
+##########      - deploy-infrastructure
+###########          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+###########          filters:
+###########            branches:
+###########              only: [test-feature-branch]
+##########      - configure-infrastructure:
+##########          requires: [deploy-infrastructure]
+###########      - run-migrations:
+###########          requires: [configure-infrastructure]
+##########      - deploy-frontend:
+##########          requires: [configure-infrastructure] # this line should be deleted!!!
+###########          requires: [run-migrations]
+##########      - deploy-backend:
+##########          requires: [configure-infrastructure] # this line should be deleted!!!
+###########          requires: [run-migrations]
+      - smoke-test
 #          requires: [deploy-backend, deploy-frontend]
 #      - cloudfront-update:
 #          requires: [smoke-test]
