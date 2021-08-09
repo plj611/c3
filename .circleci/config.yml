@@ -429,25 +429,37 @@ jobs:
           command: |
             # your code here
             echo $API_URL
-            ##curl --connect-timeout 10 -s http://${API_URL}/api/status
-            ##retval=$?
+            curl --connect-timeout 10 -s http://${API_URL}/api/status
+            retval=$?
 
-            ##echo $retval
+            echo $retval
 
-            ##if [ $retval -eq 0 ]
-            ##then
-            ##   echo "Backend OK"
-            ##   exit 0
-            ##else
-            ##   echo "Backend Fail"
-            ##   exit 1
-            ##fi
+            if [ $retval -eq 0 ]
+            then
+               echo "Backend OK"
+               exit 0
+            else
+               echo "Backend Fail"
+               exit 1
+            fi
+      - run:
+          name: Frontend smoke test.
+          command: |
+            # your code here
+            curl --connect-timeout 10 -s http://udapeople-<< pipeline.parameters.run_id >>.s3-website-us-west-2.amazonaws.com | grep "Welcome"
+            retval=$?
 
-      #- run:
-      #    name: Frontend smoke test.
-      #    command: |
-      #      # your code here
-      # Here's where you will add some code to rollback on failure  
+            echo $retval
+
+            if [ $retval -eq 0 ]
+            then
+               echo "Frontend OK"
+               #exit 0
+            else
+               echo "Backend Fail"
+               #exit 1
+            fi
+#      # Here's where you will add some code to rollback on failure  
 
 #  cloudfront-update:
 #    docker:
