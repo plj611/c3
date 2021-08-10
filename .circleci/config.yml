@@ -338,6 +338,7 @@ jobs:
           name: Build Frontend
           command: |
             cd frontend
+            echo $API_URL
             npm run build
             ls -lR dist
       - run:
