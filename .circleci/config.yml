@@ -7,6 +7,9 @@ parameters:
   run_id:
     type: string
     default: ${CIRCLE_WORKFLOW_ID:24}
+  project_workflow_id:
+    type: string
+    default: phm6cd4e27cfc53
 
 commands:
   destroy-environment:
