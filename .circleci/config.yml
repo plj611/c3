@@ -200,7 +200,7 @@ jobs:
             aws cloudformation deploy \
               --template-file .circleci/files/backend.yml \
               --tags project="UdaPeople" \
-              --stack-name "UdaPeople-back-end-${CIRCLE_WORKFLOW_ID}" \
+              --stack-name "UdaPeople-back-end-<< pipeline.parameters.run_id >>" \
               --parameter-overrides ID=<< pipeline.parameters.run_id >>  
               #--parameter-overrides ID=${CIRCLE_WORKFLOW_ID}  
       - run:
@@ -209,7 +209,7 @@ jobs:
             aws cloudformation deploy \
               --template-file .circleci/files/frontend.yml \
               --tags project="UdaPeople" \
-              --stack-name "UdaPeople-front-end-${CIRCLE_WORKFLOW_ID}" \
+              --stack-name "UdaPeople-front-end-<< pipeline.parameters.run_id >>" \
               --parameter-overrides ID=<< pipeline.parameters.run_id >>  
               #--parameter-overrides ID="${CIRCLE_WORKFLOW_ID}"  
       - run:
@@ -231,7 +231,7 @@ jobs:
             - project/.circleci/ansible/inventory.txt
       # Here's where you will add some code to rollback on failure      
       - destroy-environment:
-          ID: ${CIRCLE_WORKFLOW_ID}
+          ID: << pipeline.parameters.run_id >> 
 
   configure-infrastructure:
     docker:
@@ -264,7 +264,7 @@ jobs:
             ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/configure-server.yml
       # destroy environment if something wrong
       - destroy-environment:
-          ID: ${CIRCLE_WORKFLOW_ID}
+          ID: << pipeline.parameters.run_id >> 
 
   run-migrations:
     docker:
@@ -298,7 +298,7 @@ jobs:
               curl -H "Content-Type: text/plain" \
               -H "token: << pipeline.parameters.memstash_token >>" \
               --request PUT --data "1" \
-              https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
+              https://api.memstash.io/values/migration_<< pipeline.parameters.run_id >>
       - run:
           name: Install aws-cli
           when: on_fail
@@ -306,9 +306,9 @@ jobs:
             sudo apt-get update
             sudo apt-get install awscli
       - revert-migrations:
-          ID: ${CIRCLE_WORKFLOW_ID}
+          ID: << pipeline.parameters.run_id >>
       - destroy-environment:
-          ID: ${CIRCLE_WORKFLOW_ID}
+          ID: << pipeline.parameters.run_id >>
      # Here's where you will add some code to rollback on failure      
 
   deploy-frontend:
@@ -356,9 +356,9 @@ jobs:
             aws s3 cp --recursive frontend/dist "s3://udapeople-<< pipeline.parameters.run_id >>"         
        # Here's where you will add some code to rollback on failure      
       - revert-migrations:
-          ID: ${CIRCLE_WORKFLOW_ID}
+          ID: << pipeline.parameters.run_id >>
       - destroy-environment:
-          ID: ${CIRCLE_WORKFLOW_ID}
+          ID: << pipeline.parameters.run_id >>
                     
   deploy-backend:
     docker:
@@ -401,9 +401,9 @@ jobs:
           command: |
             sudo apt-get install awscli
       - revert-migrations:
-          ID: ${CIRCLE_WORKFLOW_ID}
+          ID: << pipeline.parameters.run_id >>
       - destroy-environment:
-          ID: ${CIRCLE_WORKFLOW_ID}
+          ID: << pipeline.parameters.run_id >>
 
   smoke-test:
     docker:
@@ -470,9 +470,9 @@ jobs:
           command: |
             sudo apt-get install awscli
       - revert-migrations:
-          ID: ${CIRCLE_WORKFLOW_ID}
+          ID: << pipeline.parameters.run_id >>
       - destroy-environment:
-          ID: ${CIRCLE_WORKFLOW_ID}
+          ID: << pipeline.parameters.run_id >>
 
 #  cloudfront-update:
 #    docker:
