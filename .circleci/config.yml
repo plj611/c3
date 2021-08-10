@@ -413,10 +413,11 @@ jobs:
       - checkout
       - attach_workspace:
           at: ~/
-      #- run:
-      #    name: Install dependencies
-      #    command: |
-      #      # your code here
+      - run:
+          name: Install curl 
+          command: |
+            # your code here
+            sudo apt install curl
       - run:
           name: Get backend url
           command: |
