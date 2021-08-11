@@ -494,27 +494,37 @@ jobs:
               --no-paginate --output text)
             echo $OldWorkflowID
             echo "export SaveWorkflowID=$OldWorkflowID" >> $BASH_ENV
-            echo "export Test=1233444" >> $BASH_ENV
       - run:
           name: Update cloudfront distribution
           command: |
             # your code here
             echo $SaveWorkflowID
-            echo $OldWorkflowID
-            echo $Test
+            # Save workflowid
+            echo $SaveWorkflowID > ~/project/workflowid.txt
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/workflowid.txt
       # Here's where you will add some code to rollback on failure  
 
-#  cleanup:
-#      docker:
-#        # Docker image here
-#      steps:
-#        # Checkout code from git
-#        - run:
-#            name: Get old stack workflow id
-#            command: |
-#              # your code here
-#              export OldWorkflowID="the id here"
-#              export STACKS=[] #put the list of stacks here
+  cleanup:
+      docker:
+        # Docker image here
+      - image: amazon/aws-cli
+      steps:
+        # Checkout code from git
+        - checkout
+        - attach_workspace:
+            at: ~/
+        - run:
+            name: Get old stack workflow id from workspace
+            command: |
+              # your code here
+              OldWorkflowID=$(cat ~/project/workflowid.txt)
+              echo $OldWorkflowID
+
+              #export OldWorkflowID="the id here"
+              #export STACKS=[] #put the list of stacks here
 #        - run:
 #            name: Remove old stacks and files
 #            command: |
@@ -557,5 +567,5 @@ workflows:
       - cloudfront-update
 ####          requires: [deploy-infrastructure] # this line should be deleted!
 #          requires: [smoke-test]
-#      - cleanup:
-#          requires: [cloudfront-update]
+      - cleanup:
+          requires: [cloudfront-update]
