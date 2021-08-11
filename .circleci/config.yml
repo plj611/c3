@@ -32,8 +32,8 @@ commands:
     parameters:
       ID:
         type: string
-      steps:
-        - run:
+    steps:
+      - run:
           name: Hello ID
           command: |
             echo << parameters.ID >>
