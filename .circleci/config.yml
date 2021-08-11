@@ -501,6 +501,10 @@ jobs:
             echo $SaveWorkflowID
             # Save workflowid
             echo $SaveWorkflowID > ~/project/workflowid.txt
+      - run:
+          name: Install dependencies
+          command: |
+            yum install -y tar gzip
       - persist_to_workspace:
           root: ~/
           paths:
