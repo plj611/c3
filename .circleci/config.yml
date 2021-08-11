@@ -493,12 +493,13 @@ jobs:
               list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
               --no-paginate --output text)
             echo $OldWorkflowID
-            echo "export OldWorkflowID" >> $BASH_ENV
+            echo "export SaveWorkflowID=$OldWorkflowID" >> $BASH_ENV
             echo "export Test=1233444" >> $BASH_ENV
       - run:
           name: Update cloudfront distribution
           command: |
             # your code here
+            echo $SaveWorkflowID
             echo $OldWorkflowID
             echo $Test
       # Here's where you will add some code to rollback on failure  
