@@ -27,6 +27,17 @@ commands:
             aws cloudformation delete-stack --stack-name UdaPeople-back-end-<< parameters.ID >>
             aws cloudformation delete-stack --stack-name UdaPeople-front-end-<< parameters.ID >>
 
+  PrintID:
+    description: Test Only
+    parameters:
+      ID:
+        type: string
+      steps:
+        - run:
+          name: Hello ID
+          command: |
+            echo << parameters.ID >>
+
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
     parameters:
@@ -529,18 +540,12 @@ jobs:
             command: |
               # your code here
               OldWorkflowID=$(cat ~/project/workflowid.txt)
-              echo $OldWorkflowID
+              echo "export SaveWorkflowID=$OldWorkflowID" >> $BASH_ENV
 
               #export OldWorkflowID="the id here"
               #export STACKS=[] #put the list of stacks here
-#        - run:
-#            name: Remove old stacks and files
-#            command: |
-#              if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
-#              then
-#                # your code here
-#              fi
-            
+        - PrintID:
+            id: << $SaveWorkflowID >> 
 
 workflows:
   default:
