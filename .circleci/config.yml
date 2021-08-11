@@ -566,7 +566,7 @@ jobs:
               # deliberately fail the job and destroy the old environment
               exit 1
         - destroy-environment:
-            id: $SaveWorkflowID 
+            ID: $SaveWorkflowID 
 
 workflows:
   default:
