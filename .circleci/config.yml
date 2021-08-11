@@ -556,11 +556,13 @@ jobs:
             command: |
               # your code here
               OldWorkflowID=$(cat ~/project/workflowid.txt)
+
+              # Save id for next step
               echo "export SaveWorkflowID=$OldWorkflowID" >> $BASH_ENV
 
-              #export OldWorkflowID="the id here"
-              #export STACKS=[] #put the list of stacks here
-        - printid:
+              # deliberately fail the job and destroy the old environment
+              exit 1
+        - destroy-environment:
             id: $SaveWorkflowID 
 
 workflows:
