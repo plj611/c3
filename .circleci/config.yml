@@ -566,7 +566,7 @@ jobs:
               if [ $SaveWorkflowID == << pipeline.parameters.project_workflow_id >> ]
               then
                 # remove the manual create S3 only
-                aws s3 rb s3://${SaveWorkflowID}
+                aws s3 rb s3://udapeople-${SaveWorkflowID}
               else
                 # remove frontend, backend stack    
                 aws cloudformation delete-stack --stack-name UdaPeople-back-end-${SaveWorkflowID}
