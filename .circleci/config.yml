@@ -24,19 +24,22 @@ commands:
           when: on_fail
           command: |
             echo << parameters.ID >>
-            aws cloudformation delete-stack --stack-name UdaPeople-back-end-<< parameters.ID >>
-            aws cloudformation delete-stack --stack-name UdaPeople-front-end-<< parameters.ID >>
 
-  printid:
-    description: Test Only
-    parameters:
-      id:
-        type: string
-    steps:
-      - run:
-          name: Hello ID
-          command: |
-            echo << parameters.id >>
+            # First, we have to empty S3 before delete it
+            aws s3 rm --recursive s3://udapeople-<< parameters.ID >>
+
+            # next, we will determine if the pass in ID == project_workflow_id, 
+            # if they are the same, it means we don't have frontend, backend stack
+            # to remove. We will remove the manual create S3 only
+            if [ << parameters.ID >> == << pipeline.parameters.project_workflow_id >> ]
+            then
+              # remove the manual create S3 only
+              aws s3 rb s3://<< parameters.ID >>
+            else
+              # remove frontend, backend stack    
+              aws cloudformation delete-stack --stack-name UdaPeople-back-end-<< parameters.ID >>
+              aws cloudformation delete-stack --stack-name UdaPeople-front-end-<< parameters.ID >>
+            fi
 
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
