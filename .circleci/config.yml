@@ -554,7 +554,7 @@ jobs:
 
               # Save id for next step
               echo "export SaveWorkflowID=$OldWorkflowID" >> $BASH_ENV
-        = run:
+        - run:
             name: Clean up the old deployment
             # First, we have to empty S3 before delete it
             aws s3 rm --recursive s3://udapeople-${SaveWorkflowID}
