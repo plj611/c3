@@ -28,18 +28,10 @@ commands:
             # First, we have to empty S3 before delete it
             aws s3 rm --recursive s3://udapeople-<< parameters.ID >>
 
-            # next, we will determine if the pass in ID == project_workflow_id, 
-            # if they are the same, it means we don't have frontend, backend stack
-            # to remove. We will remove the manual create S3 only
-            if [ << parameters.ID >> == << pipeline.parameters.project_workflow_id >> ]
-            then
-              # remove the manual create S3 only
-              aws s3 rb s3://<< parameters.ID >>
-            else
-              # remove frontend, backend stack    
-              aws cloudformation delete-stack --stack-name UdaPeople-back-end-<< parameters.ID >>
-              aws cloudformation delete-stack --stack-name UdaPeople-front-end-<< parameters.ID >>
-            fi
+            # then remove frontend, backend stack
+            aws cloudformation delete-stack --stack-name UdaPeople-back-end-<< parameters.ID >>
+            aws cloudformation delete-stack --stack-name UdaPeople-front-end-<< parameters.ID >>
+
 
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
@@ -562,11 +554,23 @@ jobs:
 
               # Save id for next step
               echo "export SaveWorkflowID=$OldWorkflowID" >> $BASH_ENV
+        = run:
+            name: Clean up the old deployment
+            # First, we have to empty S3 before delete it
+            aws s3 rm --recursive s3://udapeople-${SaveWorkflowID}
 
-              # deliberately fail the job and destroy the old environment
-              exit 1
-        - destroy-environment:
-            ID: $SaveWorkflowID 
+            # we will determine if the pass in ID == project_workflow_id, 
+            # if they are the same, it means we don't have frontend, backend stack
+            # to remove. We will remove the manual create S3 only
+            if [ $SaveWorkflowID == << pipeline.parameters.project_workflow_id >> ]
+            then
+              # remove the manual create S3 only
+              aws s3 rb s3://${SaveWorkflowID}
+            else
+              # remove frontend, backend stack    
+              aws cloudformation delete-stack --stack-name UdaPeople-back-end-${SaveWorkflowID}
+              aws cloudformation delete-stack --stack-name UdaPeople-front-end-${SaveWorkflowID}
+            fi
 
 workflows:
   default:
