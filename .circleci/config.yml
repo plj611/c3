@@ -510,6 +510,18 @@ jobs:
           command: |
             # your code here
             echo $SaveWorkflowID
+
+            # Update cloudfront to current frontend deployment 
+            aws cloudformation deploy \
+              --template-file cloudfront.yml \
+              --tags project="UdaPeople" \
+              --stack-name "UdaPeople-cloudfront" \
+              --parameter-overrides WorkflowID=<< pipeline.parameters.run_id >>
+      - run:
+          name: Save workflowid to file for workspace persist
+          command: |
+            echo $SaveWorkflowID
+
             # Save workflowid
             echo $SaveWorkflowID > ~/project/workflowid.txt
       - run:
@@ -521,6 +533,10 @@ jobs:
           paths:
             - project/workflowid.txt
       # Here's where you will add some code to rollback on failure  
+      - revert-migrations:
+          ID: << pipeline.parameters.run_id >>
+      - destroy-environment:
+          ID: << pipeline.parameters.run_id >>
 
   cleanup:
       docker:
