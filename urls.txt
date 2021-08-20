@@ -1,1 +1,6 @@
 URL01: https://github.com/plj611/cdond-c3-project
+URL02: http://udapeople-3d20f88941cb.s3-website-us-west-2.amazonaws.com
+URL03: https://d19rz2opq8br3z.cloudfront.net
+URL04: http://ec2-34-220-173-241.us-west-2.compute.amazonaws.com
+URL05: http://ec2-34-219-56-66.us-west-2.compute.amazonaws.com:9090
+
