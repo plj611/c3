@@ -454,8 +454,7 @@ jobs:
             if [ $retval -eq 0 ]
             then
                echo "Backend OK"
-               ###exit 0
-               exit 1
+               exit 0
             else
                echo "Backend Fail"
                exit 1
